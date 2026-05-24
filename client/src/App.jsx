@@ -1,56 +1,137 @@
-import axios from "axios"
-import { useState } from "react"
+import { useState } from "react";
+import axios from "axios";
 
 function App() {
-  const [file, setFile] = useState(null)
-  const [text, setText] = useState("")
+  const [file, setFile] = useState(null);
+  const [transcription, setTranscription] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleUpload = async () => {
-    const formData = new FormData()
+    if (!file) {
+      alert("Please select an audio file");
+      return;
+    }
 
-    formData.append("audio", file)
+    const formData = new FormData();
+    formData.append("audio", file);
 
-    const response = await axios.post(
-      "http://127.0.0.1:3000/upload",
-      formData
-    )
+    try {
+      setLoading(true);
 
-    setText(response.data.text)
-  }
+      const response = await axios.post(
+        "http://localhost:3000/transcribe",
+        formData
+      );
+
+      setTranscription(response.data.text);
+    } catch (error) {
+      console.error(error);
+      alert("Upload failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-10">
-      <h1 className="text-4xl font-bold mb-10">
-        Speech To Text 🎤
-      </h1>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#000",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "white",
+        fontFamily: "Arial",
+        padding: "20px",
+      }}
+    >
+      <div
+        style={{
+          width: "450px",
+          background: "#111",
+          padding: "40px",
+          borderRadius: "20px",
+          boxShadow: "0 0 20px rgba(0,0,0,0.5)",
+          textAlign: "center",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "48px",
+            marginBottom: "30px",
+          }}
+        >
+          Speech To Text 🎤
+        </h1>
 
-      <div className="bg-zinc-900 p-8 rounded-2xl w-[400px]">
-        <input
-          type="file"
-          accept="audio/*"
-          onChange={(e) => setFile(e.target.files[0])}
-          className="mb-5"
-        />
+        <label
+          style={{
+            display: "inline-block",
+            background: "#2563eb",
+            padding: "12px 24px",
+            borderRadius: "10px",
+            cursor: "pointer",
+            marginBottom: "20px",
+            fontWeight: "bold",
+          }}
+        >
+          Choose Audio File
+          <input
+            type="file"
+            accept="audio/*"
+            hidden
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+        </label>
+
+        {file && (
+          <p
+            style={{
+              marginBottom: "20px",
+              color: "#60a5fa",
+              wordBreak: "break-word",
+            }}
+          >
+            {file.name}
+          </p>
+        )}
 
         <button
           onClick={handleUpload}
-          className="bg-blue-500 px-4 py-2 rounded-xl w-full"
+          disabled={loading}
+          style={{
+            width: "100%",
+            padding: "14px",
+            border: "none",
+            borderRadius: "10px",
+            background: "#2563eb",
+            color: "white",
+            fontSize: "18px",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
         >
-          Upload Audio
+          {loading ? "Transcribing..." : "Upload Audio"}
         </button>
 
-        {text && (
-          <div className="mt-6">
-            <h2 className="font-bold mb-2">
-              Transcription:
-            </h2>
-
-            <p>{text}</p>
+        {transcription && (
+          <div
+            style={{
+              marginTop: "30px",
+              textAlign: "left",
+              background: "#1a1a1a",
+              padding: "20px",
+              borderRadius: "10px",
+              lineHeight: "1.7",
+            }}
+          >
+            <h3>Transcription:</h3>
+            <p>{transcription}</p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
