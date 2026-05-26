@@ -12,20 +12,31 @@ import Transcription from "./models/Transcription.js";
 
 dotenv.config();
 
+const requiredEnvs = ["MONGO_URI", "GROQ_API_KEY"];
+const missingEnvs = requiredEnvs.filter((key) => !process.env[key]);
+if (missingEnvs.length > 0) {
+  console.error("Missing required environment variables:", missingEnvs.join(", "));
+  process.exit(1);
+}
+
+const uploadsPath = new URL("./uploads", import.meta.url).pathname;
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(new URL("./uploads", import.meta.url).pathname));
+app.use("/uploads", express.static(uploadsPath));
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected ✅"))
-  .catch((error) => console.log(error));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log("MongoDB Error:", err));
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const storage = multer.diskStorage({
-  destination: "uploads/",
+  destination: uploadsPath,
   filename: (_req, file, cb) => {
     const ext = path.extname(file.originalname);
     const safeName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
@@ -39,7 +50,7 @@ app.get("/", (_req, res) => res.send("Server Running ✅"));
 
 app.post("/transcribe", upload.single("audio"), async (req, res) => {
   try {
-    let userId = req.body.userId || "guest";
+    const userId = req.body.userId || "guest";
     if (!req.file) {
       return res.status(400).json({ message: "No audio uploaded" });
     }
@@ -58,22 +69,19 @@ app.post("/transcribe", upload.single("audio"), async (req, res) => {
 
     res.json({ success: true, transcription: transcription.text, savedTranscription });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Transcription failed" });
+    console.log("POST /transcribe error:", error);
+    res.status(500).json({ message: error.message || "Transcription failed" });
   }
 });
 
 app.get("/transcriptions", async (req, res) => {
   try {
-    const userId = req.query.userId;
-    if (!userId) {
-      return res.status(400).json({ message: "Missing userId query parameter" });
-    }
+    const userId = req.query.userId || "guest";
     const transcriptions = await Transcription.find({ userId }).sort({ createdAt: -1 });
     res.json(transcriptions);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Failed to fetch transcriptions" });
+    console.log("GET /transcriptions error:", error);
+    res.status(500).json({ message: error.message || "Failed to fetch transcriptions" });
   }
 });
 

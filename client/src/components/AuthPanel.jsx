@@ -5,6 +5,7 @@ export default function AuthPanel({ user, onUserChange, setMessage, loading, set
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegister, setIsRegister] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
 
   const handleAuth = async () => {
     setMessage("");
@@ -24,8 +25,11 @@ export default function AuthPanel({ user, onUserChange, setMessage, loading, set
 
       if (error) {
         setMessage(error.message);
+        setStatusMessage(error.message);
       } else {
-        setMessage("Signup successful. Please check your email to confirm.");
+        const ok = "Signup successful. Please check your email to confirm.";
+        setMessage(ok);
+        setStatusMessage(ok);
         onUserChange(data.user || null);
       }
     } else {
@@ -36,8 +40,11 @@ export default function AuthPanel({ user, onUserChange, setMessage, loading, set
 
       if (error) {
         setMessage(error.message);
+        setStatusMessage(error.message);
       } else {
-        setMessage("Logged in successfully.");
+        const ok = "Logged in successfully.";
+        setMessage(ok);
+        setStatusMessage(ok);
         onUserChange(data.user || null);
       }
     }
@@ -121,6 +128,11 @@ export default function AuthPanel({ user, onUserChange, setMessage, loading, set
           >
             {isRegister ? "Sign Up" : "Login"}
           </button>
+        </div>
+      )}
+      {statusMessage && (
+        <div className="mt-6 rounded-3xl border border-cyan-500/15 bg-slate-950/90 px-5 py-4 text-sm text-slate-200">
+          {statusMessage}
         </div>
       )}
     </div>
