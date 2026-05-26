@@ -68,7 +68,7 @@ export default function AuthPanel({ user, onUserChange, setMessage, loading, set
 
   return (
     <div className="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-6 shadow-xl shadow-slate-950/10">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-white">Account</h2>
           <p className="mt-2 text-sm text-slate-400">
@@ -105,7 +105,7 @@ export default function AuthPanel({ user, onUserChange, setMessage, loading, set
           <p className="mt-2 text-sm text-slate-400">User ID: {user.id}</p>
         </div>
       ) : (
-        <div className="mt-6 grid gap-4 sm:grid-cols-[1fr_1fr]">
+        <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2">
           <input
             type="email"
             value={email}

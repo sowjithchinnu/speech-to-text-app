@@ -18,7 +18,7 @@ export default function Dropzone({
 
   return (
     <div className="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-6 shadow-xl shadow-cyan-500/5">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-white">Upload audio</h2>
           <p className="mt-2 text-sm text-slate-400">
@@ -31,7 +31,7 @@ export default function Dropzone({
       </div>
 
       <div
-        className={`mt-8 rounded-[1.75rem] border-2 px-5 py-10 text-center transition ${dragClasses}`}
+        className={`mt-8 rounded-[1.75rem] border-2 px-4 py-8 text-center transition sm:px-5 sm:py-10 ${dragClasses}`}
         onDragEnter={(event) => {
           event.preventDefault();
           setDragActive(true);
@@ -57,7 +57,7 @@ export default function Dropzone({
         <p className="mt-2 text-sm text-slate-400">Accepted format: audio/*</p>
       </div>
 
-      <label className="mt-6 flex cursor-pointer items-center justify-center rounded-3xl border border-white/10 bg-slate-900 px-5 py-4 text-sm text-slate-200 transition hover:border-cyan-500/40">
+      <label className="mt-6 flex w-full cursor-pointer items-center justify-center rounded-3xl border border-white/10 bg-slate-900 px-5 py-4 text-sm text-slate-200 transition hover:border-cyan-500/40">
         <span className="font-medium text-slate-100">Browse files</span>
         <input
           ref={fileInputRef}

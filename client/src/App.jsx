@@ -131,14 +131,14 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="mx-auto max-w-6xl px-6 py-12">
+    <div className="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-10">
         <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/85 shadow-[0_25px_80px_-45px_rgba(56,189,248,0.85)] backdrop-blur-xl">
-          <div className="bg-slate-950/80 px-8 py-10 text-center sm:px-14">
+          <div className="bg-slate-950/80 px-6 py-8 text-center sm:px-10 sm:py-10">
             <p className="mb-4 inline-flex items-center rounded-full bg-cyan-500/15 px-4 py-2 text-sm font-medium text-cyan-300">
               AI-driven speech transcription
             </p>
-            <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-6xl">
+            <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
               AI Speech to Text
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
@@ -146,7 +146,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid gap-8 px-6 pb-10 pt-8 sm:grid-cols-[1.6fr_1fr] sm:px-10">
+          <div className="grid gap-6 px-4 pb-10 pt-8 md:grid-cols-[1.6fr_1fr] sm:px-6 lg:px-10 xl:gap-8">
             <section className="space-y-8">
               <AuthPanel user={user} onUserChange={setUser} setMessage={setMessage} setLoading={setLoading} />
 
