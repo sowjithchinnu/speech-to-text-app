@@ -5,7 +5,9 @@ import Dropzone from "./components/Dropzone";
 import Transcriptions from "./components/Transcriptions";
 import supabase from "./lib/supabaseClient";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3000";
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  "https://speech-to-text-backend-k8zh.onrender.com";
 
 function App() {
   const fileInputRef = useRef(null);
